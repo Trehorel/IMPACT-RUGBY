@@ -18,7 +18,7 @@
 const MAJ = "à renseigner";
 
 // Lien CSV publié de ton Google Sheets (Fichier > Partager > Publier sur le Web)
-const URL_RESULTATS = "COLLE_TON_LIEN_ICI";
+const URL_RESULTATS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQ5gGEboGNF7V3RTykps3PZKE1-AnxhoWZL5G19hcRHuvBVXfu_H28ei7M9bGTwq0uWjoIgWEj3Fwx/pub?gid=0&single=true&output=csv";
 
 // Règles de points (à vérifier sur le règlement officiel de la LNR)
 const REGLES = {
