@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IMPACT RUGBY | Le rugby sans compromis</title>
+  <meta name="description" content="Classements Top 14 et Pro D2, magazine et guide du rugby.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="entete">
+    <a class="logo" href="index.html">IMPACT<span>RUGBY</span></a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="menu">
+      <a href="index.html">Accueil</a>
+      <a href="top14.html">Top 14</a>
+      <a href="pro-d2.html">Pro D2</a>
+      <a href="magazine.html">Magazine</a>
+      <a href="comprendre.html">Comprendre</a>
+      <a href="clubs.html">Clubs</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="conteneur">
+        <span class="kicker">Le magazine du rugby français</span>
+        <h1>
+          <span class="ligne"><span style="--i:0">Le rugby</span></span>
+          <span class="ligne"><span style="--i:1" class="rouge">sans</span></span>
+          <span class="ligne"><span style="--i:2">compromis</span></span>
+        </h1>
+        <p>Classements, dossiers et explications : tout ce qu'il faut pour vivre le Top 14, la Pro D2 et le XV de France à fond.</p>
+        <div class="boutons">
+          <a class="btn" href="top14.html">Voir le Top 14</a>
+          <a class="btn vide" href="magazine.html">Lire le magazine</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-piste">
+        <span>Top 14 • Pro D2 • XV de France • Bouclier de Brennus • Mêlée • Essai • </span>
+        <span>Top 14 • Pro D2 • XV de France • Bouclier de Brennus • Mêlée • Essai • </span>
+      </div>
+    </div>
+
+    <section>
+      <div class="conteneur">
+        <div class="compteurs">
+          <div class="compteur reveal"><strong data-compteur="15">0</strong><span>joueurs par équipe</span></div>
+          <div class="compteur reveal"><strong data-compteur="80">0</strong><span>minutes de jeu</span></div>
+          <div class="compteur reveal"><strong data-compteur="14">0</strong><span>clubs en Top 14</span></div>
+          <div class="compteur reveal"><strong data-compteur="16">0</strong><span>clubs en Pro D2</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="conteneur">
+        <div class="titre-section reveal">
+          <h2>Explore le site</h2>
+          <p>Six pages pour tout savoir sur le rugby.</p>
+        </div>
+        <div class="grille">
+          <a class="carte reveal" href="top14.html">
+            <span class="num">01</span>
+            <h3>Top 14</h3>
+            <p>Le classement des 14 meilleurs clubs français.</p>
+          </a>
+          <a class="carte reveal" href="pro-d2.html">
+            <span class="num">02</span>
+            <h3>Pro D2</h3>
+            <p>La course à la montée, club par club.</p>
+          </a>
+          <a class="carte reveal" href="magazine.html">
+            <span class="num">03</span>
+            <h3>Magazine</h3>
+            <p>Dossiers et histoires pour comprendre l'âme du rugby.</p>
+          </a>
+          <a class="carte reveal" href="comprendre.html">
+            <span class="num">04</span>
+            <h3>Comprendre</h3>
+            <p>Règles, points et postes expliqués simplement.</p>
+          </a>
+          <a class="carte reveal" href="clubs.html">
+            <span class="num">05</span>
+            <h3>Clubs</h3>
+            <p>Retrouve tous les clubs et l'équipe de France.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="bande">
+      <div class="conteneur reveal">
+        <h2>Un sport de combat.<br><em>Un sport d'équipe.</em></h2>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="conteneur">
+      <a class="logo" href="index.html">IMPACT<span>RUGBY</span></a>
+      <p>Site non officiel, fait par passion pour le rugby. © 2026</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
