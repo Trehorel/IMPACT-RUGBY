@@ -124,14 +124,161 @@ function trier(clubs) {
   );
 }
 
+/* ---------- Lecture du tableur Google Sheets ---------- */
+function normaliser(texte) {
+  return String(texte || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function lireCSV(texte) {
+  const lignes = [];
+  let ligne = [];
+  let champ = "";
+  let guillemets = false;
+
+  for (let i = 0; i < texte.length; i++) {
+    const c = texte[i];
+    if (guillemets) {
+      if (c === '"' && texte[i + 1] === '"') {
+        champ += '"';
+        i++;
+      } else if (c === '"') {
+        guillemets = false;
+      } else {
+        champ += c;
+      }
+    } else if (c === '"') {
+      guillemets = true;
+    } else if (c === ",") {
+      ligne.push(champ);
+      champ = "";
+    } else if (c === "\n" || c === "\r") {
+      if (c === "\r" && texte[i + 1] === "\n") i++;
+      ligne.push(champ);
+      champ = "";
+      lignes.push(ligne);
+      ligne = [];
+    } else {
+      champ += c;
+    }
+  }
+
+  if (champ !== "" || ligne.length) {
+    ligne.push(champ);
+    lignes.push(ligne);
+  }
+  return lignes;
+}
+
+function lireMatchs(texte) {
+  const lignes = lireCSV(texte).filter((l) => l.some((c) => c.trim() !== ""));
+  if (!lignes.length) return [];
+
+  const entetes = lignes[0].map((h) =>
+    h.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  );
+
+  return lignes.slice(1).map((l) => {
+    const match = {};
+    entetes.forEach((h, i) => (match[h] = (l[i] || "").trim()));
+    return match;
+  });
+}
+
+/* ---------- Calcul du classement ---------- */
+function appliquerMatch(club, pour, contre, essaisPour, essaisContre) {
+  club.j++;
+  club.pf += pour;
+  club.pc += contre;
+
+  if (pour > contre) {
+    club.v++;
+    club.pts += REGLES.victoire;
+  } else if (pour === contre) {
+    club.n++;
+    club.pts += REGLES.nul;
+  } else {
+    club.p++;
+    if (contre - pour <= REGLES.bonusDefensifEcart) club.pts += 1;
+  }
+
+  if (essaisPour - essaisContre >= REGLES.bonusOffensifEcartEssais) club.pts += 1;
+}
+
+function calculer(ligue, base, matchs) {
+  const clubs = new Map(
+    base.map((c) => [
+      normaliser(c.nom),
+      { ...c, j: 0, v: 0, n: 0, p: 0, pf: 0, pc: 0, pts: 0 }
+    ])
+  );
+  const noms = ligue === "top14" ? ["top 14", "top14"] : ["pro d2", "prod2"];
+  const erreurs = [];
+  let nombre = 0;
+  let derniere = 0;
+
+  matchs.forEach((m) => {
+    if (!noms.includes(normaliser(m.ligue))) return;
+    if (m.score_dom === "" || m.score_ext === "") return; // match pas encore joué
+
+    const dom = clubs.get(normaliser(m.domicile));
+    const ext = clubs.get(normaliser(m.exterieur));
+    if (!dom || !ext) {
+      erreurs.push(`${m.domicile} - ${m.exterieur}`);
+      return;
+    }
+
+    const sd = Number(m.score_dom);
+    const se = Number(m.score_ext);
+    if (Number.isNaN(sd) || Number.isNaN(se)) return;
+
+    const ed = Number(m.essais_dom) || 0;
+    const ee = Number(m.essais_ext) || 0;
+
+    appliquerMatch(dom, sd, se, ed, ee);
+    appliquerMatch(ext, se, sd, ee, ed);
+    nombre++;
+    derniere = Math.max(derniere, Number(m.journee) || 0);
+  });
+
+  return {
+    clubs: [...clubs.values()],
+    erreurs,
+    info: `${nombre} match(s) pris en compte, jusqu'à la journée ${derniere}`
+  };
+}
+
+async function classementAuto(ligue, base) {
+  if (typeof URL_RESULTATS === "undefined" || !URL_RESULTATS || URL_RESULTATS.includes("COLLE")) {
+    return { clubs: base, erreurs: [], info: MAJ };
+  }
+
+  try {
+    const reponse = await fetch(URL_RESULTATS, { cache: "no-store" });
+    if (!reponse.ok) throw new Error("Erreur " + reponse.status);
+    const matchs = lireMatchs(await reponse.text());
+    return calculer(ligue, base, matchs);
+  } catch (erreur) {
+    console.warn("Tableur injoignable, classement de secours affiché :", erreur);
+    return { clubs: base, erreurs: [], info: MAJ + " (tableur injoignable)" };
+  }
+}
+
 /* ---------- Classements Top 14 / Pro D2 ---------- */
-function initClassement() {
+async function initClassement() {
   const zone = document.querySelector("[data-classement]");
   if (!zone) return;
 
   const ligue = zone.dataset.classement;
-  const clubs = trier(ligue === "top14" ? TOP14 : PRO_D2);
+  const base = ligue === "top14" ? TOP14 : PRO_D2;
   const zones = ZONES[ligue];
+
+  const resultat = await classementAuto(ligue, base);
+  const clubs = trier(resultat.clubs);
 
   const classeDuRang = (rang) => {
     const z = zones.find((x) => rang >= x.de && rang <= x.a);
@@ -189,7 +336,17 @@ function initClassement() {
   }
 
   const maj = document.querySelector("[data-maj]");
-  if (maj) maj.textContent = MAJ;
+  if (maj) maj.textContent = resultat.info;
+
+  // Avertissement si un nom de club du tableur n'est pas reconnu
+  if (resultat.erreurs.length) {
+    const alerte = document.createElement("p");
+    alerte.className = "note";
+    alerte.textContent =
+      "⚠ Matchs ignorés (nom de club non reconnu dans le tableur) : " +
+      resultat.erreurs.join(" · ");
+    zone.after(alerte);
+  }
 }
 
 /* ---------- Page Clubs : recherche + filtres ---------- */
