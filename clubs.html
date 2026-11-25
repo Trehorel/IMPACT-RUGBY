@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clubs et XV de France | IMPACT RUGBY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="entete">
+    <a class="logo" href="index.html">IMPACT<span>RUGBY</span></a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="menu">
+      <a href="index.html">Accueil</a>
+      <a href="top14.html">Top 14</a>
+      <a href="pro-d2.html">Pro D2</a>
+      <a href="magazine.html">Magazine</a>
+      <a href="comprendre.html">Comprendre</a>
+      <a href="clubs.html">Clubs</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero petit">
+      <div class="conteneur">
+        <span class="kicker">Les équipes</span>
+        <h1><span class="ligne"><span style="--i:0">Clubs <span class="rouge">&amp; XV</span></span></span></h1>
+        <p>Retrouve tous les clubs de Top 14 et de Pro D2, ainsi que l'équipe de France.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="conteneur">
+        <div class="titre-section reveal">
+          <h2>Le XV de France</h2>
+        </div>
+        <div class="xv">
+          <div class="carte reveal">
+            <span class="etiquette">Équipe nationale</span>
+            <h3>Les Bleus</h3>
+            <p>Le maillot bleu et le coq sur le cœur : l'équipe de France de rugby à XV.</p>
+          </div>
+          <div class="carte reveal">
+            <span class="etiquette">Compétition</span>
+            <h3>Tournoi des Six Nations</h3>
+            <p>Chaque hiver, la France affronte l'Angleterre, l'Irlande, l'Écosse, le pays de Galles et l'Italie.</p>
+          </div>
+          <div class="carte reveal">
+            <span class="etiquette">À venir</span>
+            <h3>Coupe du monde 2027</h3>
+            <p>Le grand rendez-vous du rugby mondial, organisé en Australie.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="conteneur">
+        <div class="titre-section reveal">
+          <h2>Les clubs</h2>
+        </div>
+        <div class="outils">
+          <input type="search" id="recherche" placeholder="Rechercher un club ou une ville…">
+          <button class="filtre actif" data-filtre="tous">Tous</button>
+          <button class="filtre" data-filtre="Top 14">Top 14</button>
+          <button class="filtre" data-filtre="Pro D2">Pro D2</button>
+        </div>
+        <div class="grille" data-clubs></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="conteneur">
+      <a class="logo" href="index.html">IMPACT<span>RUGBY</span></a>
+      <p>Site non officiel, fait par passion pour le rugby. © 2026</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
