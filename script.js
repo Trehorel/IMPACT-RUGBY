@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   initMenu();
+  initScroll();
   initReveal();
   initCompteurs();
   initClassement();
@@ -24,20 +25,51 @@ function initMenu() {
   });
 }
 
-/* ---------- Apparition au scroll ---------- */
+/* ---------- En-tête au scroll + barre de progression ---------- */
+function initScroll() {
+  const entete = document.querySelector(".entete");
+  const barre = document.createElement("div");
+  barre.className = "progression";
+  document.body.appendChild(barre);
+
+  const maj = () => {
+    const haut = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    barre.style.width = total > 0 ? (haut / total) * 100 + "%" : "0";
+    if (entete) entete.classList.toggle("scroll", haut > 20);
+  };
+
+  window.addEventListener("scroll", maj, { passive: true });
+  maj();
+}
+
+/* ---------- Apparition au scroll (avec décalage) ---------- */
 function initReveal() {
   const elements = document.querySelectorAll(".reveal");
+
+  elements.forEach((el) => {
+    const rang = Array.from(el.parentElement.children).indexOf(el);
+    el.style.transitionDelay = Math.min(rang, 5) * 0.08 + "s";
+  });
+
   const obs = new IntersectionObserver(
     (entrees) => {
       entrees.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add("visible");
-          obs.unobserve(e.target);
-        }
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        el.classList.add("visible");
+        obs.unobserve(el);
+
+        // Une fois l'apparition terminée, on libère les transitions de survol
+        setTimeout(() => {
+          el.classList.remove("reveal", "visible");
+          el.style.transitionDelay = "";
+        }, 1500);
       });
     },
     { threshold: 0.15 }
   );
+
   elements.forEach((el) => obs.observe(el));
 }
 
@@ -52,7 +84,7 @@ function initCompteurs() {
         if (!e.isIntersecting) return;
         const el = e.target;
         const cible = Number(el.dataset.compteur);
-        const duree = 1200;
+        const duree = 1400;
         const debut = performance.now();
 
         const pas = (t) => {
@@ -67,10 +99,22 @@ function initCompteurs() {
     },
     { threshold: 0.6 }
   );
+
   elements.forEach((el) => obs.observe(el));
 }
 
-/* ---------- Classements Top 14 / Pro D2 ---------- */
+/* ---------- Outils ---------- */
+function initiales(nom) {
+  const ignores = ["de", "du", "la", "le", "des", "côte", "d"];
+  const mots = nom
+    .replace(/['’-]/g, " ")
+    .split(" ")
+    .filter((m) => m && !/^\d+$/.test(m) && !ignores.includes(m.toLowerCase()));
+
+  if (mots.length === 1) return mots[0].slice(0, 2).toUpperCase();
+  return (mots[0][0] + mots[1][0]).toUpperCase();
+}
+
 function trier(clubs) {
   return [...clubs].sort(
     (a, b) =>
@@ -80,6 +124,7 @@ function trier(clubs) {
   );
 }
 
+/* ---------- Classements Top 14 / Pro D2 ---------- */
 function initClassement() {
   const zone = document.querySelector("[data-classement]");
   if (!zone) return;
@@ -101,7 +146,12 @@ function initClassement() {
       return `
         <tr class="${classeDuRang(rang)}">
           <td class="rang">${rang}</td>
-          <td class="club"><strong>${c.nom}</strong><small>${c.ville}</small></td>
+          <td class="club">
+            <div class="cellule">
+              <span class="monogramme">${initiales(c.nom)}</span>
+              <div><strong>${c.nom}</strong><small>${c.ville}</small></div>
+            </div>
+          </td>
           <td>${c.j}</td>
           <td>${c.v}</td>
           <td>${c.n}</td>
@@ -169,6 +219,7 @@ function initClubs() {
           .map(
             (c) => `
         <article class="carte club-carte">
+          <span class="monogramme">${initiales(c.nom)}</span>
           <span class="etiquette">${c.ligue}</span>
           <h3>${c.nom}</h3>
           <p>${c.ville}</p>
