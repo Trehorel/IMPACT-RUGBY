@@ -1,6 +1,14 @@
 /* ============================================================
    DONNÉES DU SITE
-   Pour mettre à jour un classement, ajoute les stats du club :
+
+   MODE AUTOMATIQUE (conseillé)
+   Les classements sont calculés à partir de ton tableur Google Sheets :
+   tu ajoutes les scores des matchs dans le tableur, le site fait le reste.
+   Colle le lien CSV publié du tableur dans URL_RESULTATS (ci-dessous).
+
+   MODE MANUEL (secours)
+   Tant que URL_RESULTATS n'est pas rempli (ou si le tableur est
+   injoignable), le site affiche les stats écrites ici. Exemple :
    club("Stade Toulousain", "Toulouse", { j: 9, v: 7, n: 0, p: 2, pf: 277, pc: 209, pts: 32 })
    j = matchs joués, v = victoires, n = nuls, p = défaites,
    pf = points marqués, pc = points encaissés, pts = points au classement
@@ -8,6 +16,17 @@
    ============================================================ */
 
 const MAJ = "à renseigner";
+
+// Lien CSV publié de ton Google Sheets (Fichier > Partager > Publier sur le Web)
+const URL_RESULTATS = "COLLE_TON_LIEN_ICI";
+
+// Règles de points (à vérifier sur le règlement officiel de la LNR)
+const REGLES = {
+  victoire: 4,
+  nul: 2,
+  bonusOffensifEcartEssais: 3, // bonus offensif : nombre d'essais d'écart
+  bonusDefensifEcart: 5        // bonus défensif : défaite de X points ou moins
+};
 
 function club(nom, ville, stats = {}) {
   return { nom, ville, j: 0, v: 0, n: 0, p: 0, pf: 0, pc: 0, pts: 0, ...stats };
