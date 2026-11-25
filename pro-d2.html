@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Classement Pro D2 | IMPACT RUGBY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="entete">
+    <a class="logo" href="index.html">IMPACT<span>RUGBY</span></a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="menu">
+      <a href="index.html">Accueil</a>
+      <a href="top14.html">Top 14</a>
+      <a href="pro-d2.html">Pro D2</a>
+      <a href="magazine.html">Magazine</a>
+      <a href="comprendre.html">Comprendre</a>
+      <a href="clubs.html">Clubs</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero petit">
+      <div class="conteneur">
+        <span class="kicker">Deuxième division</span>
+        <h1><span class="ligne"><span style="--i:0">Pro <span class="rouge">D2</span></span></span></h1>
+        <p>16 clubs, 30 journées et un rêve : monter en Top 14.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="conteneur">
+        <div class="titre-section reveal">
+          <h2>Classement</h2>
+        </div>
+        <div class="legende" data-legende></div>
+        <div data-classement="prod2"></div>
+        <p class="note">
+          Barème : victoire 4 points, +1 avec bonus offensif, match nul 2 points, défaite avec bonus défensif 1 point.<br>
+          Dernière mise à jour : <strong data-maj></strong>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="conteneur">
+      <a class="logo" href="index.html">IMPACT<span>RUGBY</span></a>
+      <p>Site non officiel, fait par passion pour le rugby. © 2026</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
